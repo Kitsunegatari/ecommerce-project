@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// 🔥 Simulación de productos (puedes cambiar los precios)
 const products = [
   { id: 1, name: "Carta Dragón", type: "Fuego", price: 50000 },
   { id: 2, name: "Carta Mago", type: "Magia", price: 30000 },
@@ -16,12 +15,10 @@ const products = [
   { id: 5, name: "Carta Titán", type: "Defensa", price: 90000 }
 ];
 
-// 🔹 Ruta principal
 app.get("/", (req, res) => {
   res.send("Servidor ecommerce funcionando 🚀");
 });
 
-// 🔹 Ruta con filtro por rango de precio
 app.get("/api/products", (req, res) => {
   const minPrice = parseInt(req.query.minPrice) || 0;
   const maxPrice = parseInt(req.query.maxPrice) || Infinity;
@@ -33,7 +30,6 @@ app.get("/api/products", (req, res) => {
   res.json(filteredProducts);
 });
 
-// 🔹 Ruta para obtener todos sin filtro
 app.get("/api/all-products", (req, res) => {
   res.json(products);
 });
