@@ -103,13 +103,3 @@ echo '{
   "include": ["./src/**/*.ts"],
   "exclude": ["./node_modules", "./build"]
 }' > tsconfig.json
-
-
-Archivos clave:
-
-"Servidor: server.ts — endpoint /api/search, lógica de búsqueda y sampleData (base de datos en memoria / cartas de superhéroes).
-Interfaz HTML: index.html — barra de búsqueda visible y contenedor de resultados.
-Lógica cliente: app.js — llamadas a /api/search, búsqueda en tiempo real (debounce) y renderizado / mensaje cuando no hay resultados.
-Scripts y dependencias: package.json — comandos dev/start y dependencias necesarias.
-Variables de entorno: .env — configuración opcional (puerto, credenciales).
-Configuración TypeScript: tsconfig.json — ajustes de compilación (si compilas a JS)."
