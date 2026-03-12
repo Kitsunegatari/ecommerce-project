@@ -1,1 +1,54 @@
+import { Router, Request, Response } from "express";
+import { cards } from "../data/cards";
 
+interface Card {
+  id: number;
+  type: string;
+  price: number;
+  promotion: boolean;
+}
+
+const router = Router();
+
+/**
+ * GET /cards
+ * Query params:
+ *   - promotion (boolean)
+ *   - minPrice (number)
+ *   - maxPrice (number)
+ *   - type (string)
+ */
+router.get("/", (req: Request, res: Response) => {
+  const { promotion, minPrice, maxPrice, type } = req.query;
+
+  let filtered: Card[] = [...cards];
+
+  // Filtro por promoción
+  if (promotion?.toString().toLowerCase() === "true") {
+    filtered = filtered.filter((c) => c.promotion);
+  }
+
+  // Filtro por rango de precio
+  const min = minPrice ? Number(minPrice) : undefined;
+  const max = maxPrice ? Number(maxPrice) : undefined;
+
+  if (min !== undefined && !isNaN(min)) {
+    filtered = filtered.filter((c) => c.price >= min);
+  }
+  if (max !== undefined && !isNaN(max)) {
+    filtered = filtered.filter((c) => c.price <= max);
+  }
+
+  // Filtro por tipo de carta
+  if (type) {
+    const typeLower = type.toString().toLowerCase();
+    filtered = filtered.filter((c) => c.type.toLowerCase() === typeLower);
+  }
+
+  return res.json({
+    count: filtered.length,
+    cards: filtered,
+  });
+});
+
+export default router;
