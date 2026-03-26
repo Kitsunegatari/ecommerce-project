@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Carta</title>
+    <link rel="stylesheet" href="styles/card-detail.css">
+</head>
+<body>
+    <!-- Modal de Detalle de Carta -->
+    <div id="cardModal" class="modal hidden">
+        <div class="modal-content">
+            <!-- Botón para cerrar -->
+            <button class="btn-close" id="closeModal" aria-label="Cerrar">&times;</button>
+
+            <div class="card-detail-container">
+                <!-- Imagen de la carta -->
+                <div class="card-image-section">
+                    <img id="cardImage" src="" alt="Imagen de la carta" class="card-image">
+                </div>
+
+                <!-- Información de la carta -->
+                <div class="card-info-section">
+                    <!-- Nombre -->
+                    <h1 id="cardName" class="card-name">Nombre de la Carta</h1>
+
+                    <!-- Rareza/Tipo -->
+                    <p id="cardRarity" class="card-rarity">Común</p>
+
+                    <!-- Precio -->
+                    <div class="card-price-section">
+                        <span class="label">Precio:</span>
+                        <span id="cardPrice" class="card-price">$0.00</span>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="card-description-section">
+                        <h2>Descripción</h2>
+                        <p id="cardDescription" class="card-description">
+                            Descripción de la carta
+                        </p>
+                    </div>
+
+                    <!-- Habilidades -->
+                    <div class="card-abilities-section">
+                        <h2>Habilidades</h2>
+                        <ul id="cardAbilities" class="abilities-list">
+                            <li>Habilidad 1</li>
+                            <li>Habilidad 2</li>
+                        </ul>
+                    </div>
+
+                    <!-- Atributos Técnicos -->
+                    <div class="card-stats-section">
+                        <h2>Atributos Técnicos</h2>
+                        <div id="cardStats" class="stats-grid">
+                            <div class="stat">
+                                <span class="stat-label">Poder:</span>
+                                <span class="stat-value" id="cardPower">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Defensa:</span>
+                                <span class="stat-value" id="cardDefense">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Velocidad:</span>
+                                <span class="stat-value" id="cardSpeed">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="card-actions">
+                        <button class="btn btn-primary" id="addToCart">Agregar al Carrito</button>
+                        <button class="btn btn-secondary" id="backToCatalog">Volver al Catálogo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/card-detail.js"></script>
+</body>
+</html>
