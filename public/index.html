@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Cartas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-item-image {
+            width: 100%;
+            height: 300px;
+            background-color: #e0e0e0;
+            overflow: hidden;
+        }
+
+        .card-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-item-info {
+            padding: 15px;
+        }
+
+        .card-item-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .card-item-price {
+            color: #27ae60;
+            font-size: 18px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎴 Catálogo de Cartas</h1>
+        <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+
+    <!-- Incluir la modal de detalle -->
+    <iframe src="card-detail.html" style="display: none;"></iframe>
+
+    <script>
+        // Datos de ejemplo de cartas
+        const cardsData = [
+            {
+                id: 1,
+                name: 'Dragón de Fuego',
+                price: 25.99,
+                image: 'https://via.placeholder.com/300x400?text=Dragon+de+Fuego',
+                rarity: 'Raro',
+                description: 'Un poderoso dragón envuelto en llamas eternas. Causa gran daño a distancia.',
+                abilities: ['Llamarada Devastadora', 'Escudo de Fuego', 'Vuelo'],
+                power: 85,
+                defense: 60,
+                speed: 70
+            },
+            {
+                id: 2,
+                name: 'Mago del Hielo',
+                price: 19.99,
+                image: 'https://via.placeholder.com/300x400?text=Mago+del+Hielo',
+                rarity: 'Común',
+                description: 'Maestro de los hechizos de hielo. Controla el clima con su magia.',
+                abilities: ['Tormenta de Hielo', 'Congelación Absoluta'],
+                power: 65,
+                defense: 75,
+                speed: 80
+            },
+            {
+                id: 3,
+                name: 'Guerrero Legendario',
+                price: 49.99,
+                image: 'https://via.placeholder.com/300x400?text=Guerrero+Legendario',
+                rarity: 'Épico',
+                description: 'Un guerrero de leyenda con armadura divina. Invencible en combate.',
+                abilities: ['Corte del Destino', 'Defensa Inquebrantable', 'Resurección'],
+                power: 95,
+                defense: 90,
+                speed: 60
+            }
+        ];
+
+        // Renderizar cartas
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            cardsData.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card-item';
+                cardEl.innerHTML = `
+                    <div class="card-item-image">
+                        <img src="${card.image}" alt="${card.name}">
+                    </div>
+                    <div class="card-item-info">
+                        <div class="card-item-name">${card.name}</div>
+                        <div class="card-item-price">$${card.price.toFixed(2)}</div>
+                    </div>
+                `;
+
+                // Al hacer clic, mostrar detalle
+                cardEl.addEventListener('click', () => {
+                    window.showCardDetail(card);
+                });
+
+                grid.appendChild(cardEl);
+            });
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', renderCards);
+    </script>
+</body>
+</html>
