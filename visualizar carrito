@@ -1,0 +1,57 @@
+// Historia de Usuario: Visualizar Carrito (Min y Max)
+
+interface Producto {
+  id: number;
+  nombre: string;
+  imagen: string;
+  cantidad: number;
+  precioUnitario: number;
+}
+
+interface Carrito {
+  productos: Producto[];
+  impuestos?: number;
+}
+
+class CarritoUsuario {
+  private carrito: Carrito = { productos: [] };
+
+  agregarProducto(producto: Producto): void {
+    this.carrito.productos.push(producto);
+  }
+
+  eliminarProducto(id: number): void {
+    this.carrito.productos = this.carrito.productos.filter(p => p.id !== id);
+  }
+
+  modificarCantidad(id: number, nuevaCantidad: number): void {
+    const producto = this.carrito.productos.find(p => p.id === id);
+    if (producto) {
+      producto.cantidad = nuevaCantidad;
+    }
+  }
+
+  calcularSubtotal(producto: Producto): number {
+    return producto.cantidad * producto.precioUnitario;
+  }
+
+  calcularTotal(): number {
+    const subtotal = this.carrito.productos.reduce(
+      (acc, p) => acc + this.calcularSubtotal(p),
+      0
+    );
+    const impuestos = this.carrito.impuestos ?? 0;
+    return subtotal + impuestos;
+  }
+
+  visualizarCarrito(): void {
+    console.log("🛒 Carrito de Compras:");
+    this.carrito.productos.forEach(p => {
+      console.log(
+        `- ${p.nombre} | Cantidad: ${p.cantidad} | Precio: $${p.precioUnitario} | Subtotal: $${this.calcularSubtotal(p)}`
+      );
+    });
+    console.log(`Total a pagar: $${this.calcularTotal()}`);
+    console.log("Botón: Proceder al pago ✅");
+  }
+}
