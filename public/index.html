@@ -52,6 +52,9 @@
         .search-bar {
             flex: 1;
             min-width: 250px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
         }
 
         .search-bar input {
@@ -61,6 +64,21 @@
             border-radius: 25px;
             font-size: 14px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 25px;
+            background: #ff6b6b;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar button:hover {
+            background: #ff4b4b;
         }
 
         .cart-icon {
@@ -201,11 +219,135 @@
             gap: 4px;
         }
 
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
+        .cart-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .save-cart-btn {
+            padding: 10px 15px;
+            background: #27ae60;
             color: white;
-            font-size: 18px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background 0.2s;
+        }
+
+        .save-cart-btn:hover {
+            background: #229954;
+        }
+
+        .saved-carts-section {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .saved-carts-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .saved-carts-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .saved-cart-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .saved-cart-item button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .load-cart-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .delete-cart-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .confirm-btn {
+            background: #27ae60;
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -240,12 +382,16 @@
                 <input 
                     type="text" 
                     id="searchInput" 
-                    placeholder="🔍 Buscar cartas por nombre..."
+                    placeholder="🔍 Buscar por nombre, descripción o habilidades..."
                 >
+                <button id="searchButton" type="button">Buscar</button>
             </div>
-            <div class="cart-icon" id="cartIcon">
-                🛒
-                <div class="cart-count" id="cartCount">0</div>
+            <div class="cart-section">
+                <button class="save-cart-btn" id="saveCartBtn">💾 Guardar Carrito</button>
+                <div class="cart-icon" id="cartIcon">
+                    🛒
+                    <div class="cart-count" id="cartCount">0</div>
+                </div>
             </div>
         </div>
 
@@ -253,6 +399,13 @@
 
         <div class="no-results" id="noResults" style="display: none;">
             No se encontraron cartas que coincidan con tu búsqueda.
+        </div>
+
+        <div class="saved-carts-section">
+            <h3>🗂️ Mis Carritos Guardados</h3>
+            <div class="saved-carts-list" id="savedCartsList">
+                <!-- Carritos guardados se cargarán aquí -->
+            </div>
         </div>
     </div>
 
@@ -263,34 +416,177 @@
         style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1000;"
     ></iframe>
 
+    <!-- Modal para guardar carrito -->
+    <div class="modal" id="saveCartModal">
+        <div class="modal-content">
+            <h3>Guardar Carrito</h3>
+            <input type="text" id="cartNameInput" placeholder="Nombre del carrito" maxlength="50">
+            <div class="modal-buttons">
+                <button class="cancel-btn" id="cancelSaveBtn">Cancelar</button>
+                <button class="confirm-btn" id="confirmSaveBtn">Guardar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="cards-data.js"></script>
     <script src="app.js"></script>
     <script>
-        // Inicializar catálogo al cargar
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCardsGrid(cardsData);
-            updateCartCount();
+        async function fetchCards(searchTerm = '') {
+            const query = searchTerm.trim() ? `?q=${encodeURIComponent(searchTerm.trim())}` : '';
+            const response = await fetch(`/api/cards${query}`);
+            if (!response.ok) {
+                console.error('Error cargando cartas:', response.statusText);
+                return [];
+            }
+            return response.json();
+        }
 
-            // Buscar cartas
-            document.getElementById('searchInput').addEventListener('input', (e) => {
-                const filtered = cardsData.filter(card => 
-                    card.name.toLowerCase().includes(e.target.value.toLowerCase())
-                );
-                renderCardsGrid(filtered);
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const noResults = document.getElementById('noResults');
+            const saveCartBtn = document.getElementById('saveCartBtn');
+            const saveCartModal = document.getElementById('saveCartModal');
+            const cartNameInput = document.getElementById('cartNameInput');
+            const cancelSaveBtn = document.getElementById('cancelSaveBtn');
+            const confirmSaveBtn = document.getElementById('confirmSaveBtn');
+            const savedCartsList = document.getElementById('savedCartsList');
+
+            function updateNoResults(term, cards) {
+                noResults.style.display = term && cards.length === 0 ? 'block' : 'none';
+            }
+
+            async function loadCards(term = '') {
+                const cards = await fetchCards(term);
+                renderCardsGrid(cards);
+                updateNoResults(term, cards);
+            }
+
+            async function applyTextSearch() {
+                const term = searchInput.value;
+                await loadCards(term);
+            }
+
+            searchInput.addEventListener('input', applyTextSearch);
+            searchButton.addEventListener('click', applyTextSearch);
+
+            loadCards();
+
+            updateCartCount();
+            loadSavedCarts();
+            window.addEventListener('cartUpdated', () => {
+                updateCartCount();
+                saveCurrentCart();
             });
 
-            // Escuchar actualización del carrito
-            window.addEventListener('cartUpdated', updateCartCount);
+            // Event listeners para guardar carrito
+            saveCartBtn.addEventListener('click', () => {
+                const cart = getCurrentCart();
+                if (cart.length === 0) {
+                    alert('Tu carrito está vacío. Agrega productos antes de guardar.');
+                    return;
+                }
+                saveCartModal.classList.add('show');
+                cartNameInput.focus();
+            });
 
-            // Click en icono del carrito
+            cancelSaveBtn.addEventListener('click', () => {
+                saveCartModal.classList.remove('show');
+                cartNameInput.value = '';
+            });
+
+            confirmSaveBtn.addEventListener('click', () => {
+                const name = cartNameInput.value.trim();
+                if (!name) {
+                    alert('Por favor ingresa un nombre para el carrito.');
+                    return;
+                }
+                saveCart(name);
+                saveCartModal.classList.remove('show');
+                cartNameInput.value = '';
+                loadSavedCarts();
+            });
+
             document.getElementById('cartIcon').addEventListener('click', () => {
-                alert('Carrito: ' + JSON.stringify(JSON.parse(localStorage.getItem('cart') || '[]'), null, 2));
+                const cart = getCurrentCart();
+                alert('Carrito actual: ' + JSON.stringify(cart, null, 2));
             });
         });
 
+        function getCurrentCart() {
+            return JSON.parse(localStorage.getItem('cart') || '[]');
+        }
+
+        function saveCurrentCart() {
+            const cart = getCurrentCart();
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function saveCart(name) {
+            const cart = getCurrentCart();
+            const savedCarts = JSON.parse(localStorage.getItem('saved_carts') || '[]');
+            
+            // Verificar si ya existe un carrito con ese nombre
+            const existingIndex = savedCarts.findIndex(c => c.name === name);
+            const cartData = {
+                name: name,
+                items: [...cart],
+                date: new Date().toISOString()
+            };
+            
+            if (existingIndex >= 0) {
+                savedCarts[existingIndex] = cartData;
+            } else {
+                savedCarts.push(cartData);
+            }
+            
+            localStorage.setItem('saved_carts', JSON.stringify(savedCarts));
+            alert(`Carrito "${name}" guardado exitosamente.`);
+        }
+
+        function loadSavedCarts() {
+            const savedCarts = JSON.parse(localStorage.getItem('saved_carts') || '[]');
+            const savedCartsList = document.getElementById('savedCartsList');
+            savedCartsList.innerHTML = '';
+
+            if (savedCarts.length === 0) {
+                savedCartsList.innerHTML = '<p style="color: white; font-style: italic;">No tienes carritos guardados aún.</p>';
+                return;
+            }
+
+            savedCarts.forEach((cart, index) => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'saved-cart-item';
+                cartItem.innerHTML = `
+                    <span>${cart.name} (${cart.items.length} items - ${new Date(cart.date).toLocaleDateString()})</span>
+                    <button class="load-cart-btn" onclick="loadCart(${index})">Cargar</button>
+                    <button class="delete-cart-btn" onclick="deleteCart(${index})">Eliminar</button>
+                `;
+                savedCartsList.appendChild(cartItem);
+            });
+        }
+
+        function loadCart(index) {
+            const savedCarts = JSON.parse(localStorage.getItem('saved_carts') || '[]');
+            if (savedCarts[index]) {
+                localStorage.setItem('cart', JSON.stringify(savedCarts[index].items));
+                updateCartCount();
+                alert(`Carrito "${savedCarts[index].name}" cargado exitosamente.`);
+                window.dispatchEvent(new CustomEvent('cartUpdated'));
+            }
+        }
+
+        function deleteCart(index) {
+            const savedCarts = JSON.parse(localStorage.getItem('saved_carts') || '[]');
+            const deletedName = savedCarts[index].name;
+            savedCarts.splice(index, 1);
+            localStorage.setItem('saved_carts', JSON.stringify(savedCarts));
+            loadSavedCarts();
+            alert(`Carrito "${deletedName}" eliminado.`);
+        }
+
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = getCurrentCart();
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             document.getElementById('cartCount').textContent = count;
         }
